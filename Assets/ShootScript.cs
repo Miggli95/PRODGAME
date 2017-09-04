@@ -18,6 +18,7 @@ public class ShootScript : MonoBehaviour
     private float gravityMultiplier;
     public Slider powerbar;
     public float powerbarTreshold;
+    bool stuckOnWall = false;
     // Use this for initialization
     void Start()
     {
@@ -69,14 +70,27 @@ public class ShootScript : MonoBehaviour
         Gravity();
     }
 
-    void OnCollisionEnter(Collision col)
+    void OnCollisionStay(Collision col)
     {
         if (col.collider.CompareTag("Wall"))
         {
-            gravityMultiplier = 0;
+            if (!stuckOnWall)
+            {
+                gravityMultiplier = 0;
+                transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                stuckOnWall = true;
+            }
         }
     }
 
+    void OnCollisionExit(Collision col)
+    {
+        if (col.collider.CompareTag("Wall"))
+        {
+            gravityMultiplier = GravityMultiplier;
+            stuckOnWall = false;
+        }
+    }
     public void Gravity()
     {
         transform.GetComponent<Rigidbody>().AddForce(Physics.gravity * gravityMultiplier);
