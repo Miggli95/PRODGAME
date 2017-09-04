@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ShootScript : MonoBehaviour
 {
@@ -14,14 +15,32 @@ public class ShootScript : MonoBehaviour
     bool mouseButtonPressed = false;
     public int increaseMultiplier = 1;
     public float gravityMultiplier = 1;
+    public Slider powerbar;
+    public float powerbarTreshold;
 	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
+        powerbar.minValue = min;
+        powerbar.maxValue = max;
+        powerbarTreshold = max - min;
+        powerbar.value = force;
+
        // Mathf.Clamp(force, min, max);
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
+        if (force != 0)
+        {
+            powerbar.value = force;
+        }
+
+        else
+        {
+            powerbar.value = currentForce;
+        }
+
         if (force >= max)
         {
             increase = -1;
