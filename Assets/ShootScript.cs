@@ -10,10 +10,10 @@ public class ShootScript : MonoBehaviour
     public float min;
     public float max;
     public float currentPower;
-    int increase = 1;
+    float increase = 1;
     public float multiplier = 1;
     bool mouseButtonPressed = false;
-    public int increaseMultiplier = 1;
+    public float increaseMultiplier = 1;
     public float GravityMultiplier = 1;
     private float gravityMultiplier;
     public Slider powerbar;
