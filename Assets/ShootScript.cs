@@ -19,6 +19,8 @@ public class ShootScript : MonoBehaviour
     public Slider powerbar;
     public float powerbarTreshold;
     bool stuckOnWall = false;
+    private bool canShoot = true;
+
     // Use this for initialization
     void Start()
     {
@@ -53,7 +55,7 @@ public class ShootScript : MonoBehaviour
             increase = 1;
         }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && canShoot)
         {
             force += increase * Time.deltaTime * increaseMultiplier;
             mouseButtonPressed = true;
@@ -63,11 +65,23 @@ public class ShootScript : MonoBehaviour
         {
             currentForce = force;
             force = 0;
-            mouseButtonPressed = false;
             Shoot();
+            mouseButtonPressed = false;
+            //if (canShoot)
+            //{
+               
+            //}
         }
 
         Gravity();
+    }
+
+    void OnCollisionEnter(Collision col)
+    {
+        if (col.collider.CompareTag("Wall") || col.collider.CompareTag("Ground"))
+        {
+            canShoot = true;
+        }
     }
 
     void OnCollisionStay(Collision col)
@@ -102,5 +116,6 @@ public class ShootScript : MonoBehaviour
         Vector3 dir = Quaternion.AngleAxis(angle, transform.forward) * transform.right;
         transform.GetComponent<Rigidbody>().AddForce(dir * currentForce * multiplier);
         gravityMultiplier = GravityMultiplier;
+        canShoot = false;
     }
 }
