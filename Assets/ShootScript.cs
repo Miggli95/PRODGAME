@@ -19,7 +19,7 @@ public class ShootScript : MonoBehaviour
     public Slider powerbar;
     public float powerbarTreshold;
     bool stuckOnWall = false;
-    private bool canShoot = true;
+    public bool canShoot = true;
 
     // Use this for initialization
     void Start()
@@ -86,22 +86,35 @@ public class ShootScript : MonoBehaviour
 
     void OnCollisionStay(Collision col)
     {
-        if (col.collider.CompareTag("Wall"))
+        if (col.collider.CompareTag("Wall") || col.collider.CompareTag("Ground"))
         {
-            if (!stuckOnWall)
+            canShoot = true;
+        }
+
+        if (col.collider.CompareTag("Wall"))
+        { 
+            if (!stuckOnWall && canShoot)
             {
                 gravityMultiplier = 0;
                 transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
                 stuckOnWall = true;
+
             }
         }
+        
     }
 
     void OnCollisionExit(Collision col)
     {
+        
+        if (col.collider.CompareTag("Wall") || col.collider.CompareTag("Ground"))
+        {
+            canShoot = false;
+            gravityMultiplier = GravityMultiplier;    
+        }
+
         if (col.collider.CompareTag("Wall"))
         {
-            gravityMultiplier = GravityMultiplier;
             stuckOnWall = false;
         }
     }
