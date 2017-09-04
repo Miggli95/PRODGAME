@@ -14,22 +14,23 @@ public class ShootScript : MonoBehaviour
     public float multiplier = 1;
     bool mouseButtonPressed = false;
     public int increaseMultiplier = 1;
-    public float gravityMultiplier = 1;
+    public float GravityMultiplier = 1;
+    private float gravityMultiplier;
     public Slider powerbar;
     public float powerbarTreshold;
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start()
     {
         powerbar.minValue = min;
         powerbar.maxValue = max;
         powerbarTreshold = max - min;
         powerbar.value = force;
+        gravityMultiplier = GravityMultiplier;
+        // Mathf.Clamp(force, min, max);
+    }
 
-       // Mathf.Clamp(force, min, max);
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    // Update is called once per frame
+    void Update()
     {
         if (force != 0)
         {
@@ -68,6 +69,14 @@ public class ShootScript : MonoBehaviour
         Gravity();
     }
 
+    void OnCollisionEnter(Collision col)
+    {
+        if (col.collider.CompareTag("Wall"))
+        {
+            gravityMultiplier = 0;
+        }
+    }
+
     public void Gravity()
     {
         transform.GetComponent<Rigidbody>().AddForce(Physics.gravity * gravityMultiplier);
@@ -78,5 +87,6 @@ public class ShootScript : MonoBehaviour
         float angle = transform.GetComponentInChildren<AimAssist>().Angle;
         Vector3 dir = Quaternion.AngleAxis(angle, transform.forward) * transform.right;
         transform.GetComponent<Rigidbody>().AddForce(dir * currentForce * multiplier);
+        gravityMultiplier = GravityMultiplier;
     }
 }
