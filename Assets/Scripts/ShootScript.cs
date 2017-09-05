@@ -34,8 +34,8 @@ public class ShootScript : MonoBehaviour
 
     // ParticleStuff -----------------------------------------
 
-    public GameObject wallHit;
-
+    
+    public GameObject wallP;
 
 
 
@@ -51,7 +51,7 @@ public class ShootScript : MonoBehaviour
         // Mathf.Clamp(force, min, max);
 
         audioSource = GetComponent<AudioSource>();
-        wallHit.SetActive(false);
+
     }
 
 
@@ -148,11 +148,11 @@ public class ShootScript : MonoBehaviour
         else if (col.collider.CompareTag("Wall") || col.collider.CompareTag("Ground"))
         {
             audioSource.PlayOneShot(wall, 0.7F);
-            Vector3 spawnHit = transform.position;
-            spawnHit.y -= 0.3f;
-           
-            wallHit.transform.position = spawnHit;
-            wallHit.SetActive(true);
+            
+
+            Instantiate(wallP, transform.position, Quaternion.identity);
+
+   
            
             canShoot = true;
         }
