@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ShootScript : MonoBehaviour
@@ -24,6 +25,8 @@ public class ShootScript : MonoBehaviour
     public float shootAngle = 0;
     public AudioClip wall;
     AudioSource audioSource;
+    public int numberOfShoots = 5;
+    public bool infiniteShoots = false;
 
     // Use this for initialization
     void Start()
@@ -73,8 +76,17 @@ public class ShootScript : MonoBehaviour
         {
             currentForce = force;
             force = 0;
-            Shoot();
-            mouseButtonPressed = false;
+            if (numberOfShoots > 0 || infiniteShoots)
+            {
+                Shoot();
+                numberOfShoots--;
+                mouseButtonPressed = false;
+            }
+
+            else
+            {
+                SceneManager.LoadScene("ProdGame");
+            }
             //if (canShoot)
             //{
                
