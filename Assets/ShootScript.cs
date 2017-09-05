@@ -23,11 +23,18 @@ public class ShootScript : MonoBehaviour
     bool stuckOnWall = false;
     public bool canShoot = true;
     public float shootAngle = 0;
-    public AudioClip wall;
-    AudioSource audioSource;
     public int numberOfShoots = 5;
     public bool infiniteShoots = false;
 
+    // Soundstuff -------------------------------------------
+
+    public AudioClip wall;
+    public AudioClip bounce;
+    AudioSource audioSource;
+
+ 
+
+   
     // Use this for initialization
     void Start()
     {
@@ -103,7 +110,7 @@ public class ShootScript : MonoBehaviour
 
     void OnCollisionEnter(Collision col)
     {
-        audioSource.PlayOneShot(wall, 0.7F);
+        
 
         if (col.collider.CompareTag("Goal"))
         {
@@ -118,17 +125,23 @@ public class ShootScript : MonoBehaviour
             transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
             currentForce = -currentForce;
             Shoot(-getShootAngle(), currentForce);
+
+            audioSource.PlayOneShot(bounce, 2.0F);
         }
 
         else if (col.collider.CompareTag("BouncingRoof"))
         {
             //currentForce = -currentForce;
+            
             transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
             Shoot(-getShootAngle(), currentForce);
+
+            audioSource.PlayOneShot(bounce, 2.0F);
         }
 
         else if (col.collider.CompareTag("Wall") || col.collider.CompareTag("Ground"))
         {
+            audioSource.PlayOneShot(wall, 0.7F);
             canShoot = true;
         }
 
