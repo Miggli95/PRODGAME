@@ -96,6 +96,11 @@ public class ShootScript : MonoBehaviour
         Gravity();
     }
 
+    public void AddShoots(int shoots)
+    {
+        numberOfShoots += shoots;
+    }
+
     void OnCollisionEnter(Collision col)
     {
         audioSource.PlayOneShot(wall, 0.7F);
