@@ -32,9 +32,14 @@ public class ShootScript : MonoBehaviour
     public AudioClip bounce;
     AudioSource audioSource;
 
- 
+    // ParticleStuff -----------------------------------------
 
-   
+    public GameObject wallHit;
+
+
+
+
+
     // Use this for initialization
     void Start()
     {
@@ -46,6 +51,7 @@ public class ShootScript : MonoBehaviour
         // Mathf.Clamp(force, min, max);
 
         audioSource = GetComponent<AudioSource>();
+        wallHit.SetActive(false);
     }
 
 
@@ -142,6 +148,12 @@ public class ShootScript : MonoBehaviour
         else if (col.collider.CompareTag("Wall") || col.collider.CompareTag("Ground"))
         {
             audioSource.PlayOneShot(wall, 0.7F);
+            Vector3 spawnHit = transform.position;
+            spawnHit.y -= 0.3f;
+           
+            wallHit.transform.position = spawnHit;
+            wallHit.SetActive(true);
+           
             canShoot = true;
         }
 
