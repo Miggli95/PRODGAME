@@ -99,6 +99,15 @@ public class ShootScript : MonoBehaviour
     void OnCollisionEnter(Collision col)
     {
         audioSource.PlayOneShot(wall, 0.7F);
+
+        if (col.collider.CompareTag("Goal"))
+        {
+            int nextLvl = SceneManager.GetActiveScene().buildIndex;
+            if (nextLvl + 1 < SceneManager.sceneCount)
+                nextLvl += 1;
+            SceneManager.LoadScene(nextLvl);
+        }
+
         if (col.collider.CompareTag("BouncingWall"))
         {
             transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
