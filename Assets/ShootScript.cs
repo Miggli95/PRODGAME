@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class ShootScript : MonoBehaviour
 {
+
     public float force;
     public float currentForce;
     public float min;
@@ -21,6 +22,9 @@ public class ShootScript : MonoBehaviour
     bool stuckOnWall = false;
     public bool canShoot = true;
 
+    public AudioClip wall;
+    AudioSource audioSource;
+
     // Use this for initialization
     void Start()
     {
@@ -30,6 +34,8 @@ public class ShootScript : MonoBehaviour
         powerbar.value = force;
         gravityMultiplier = GravityMultiplier;
         // Mathf.Clamp(force, min, max);
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -78,6 +84,7 @@ public class ShootScript : MonoBehaviour
 
     void OnCollisionEnter(Collision col)
     {
+        audioSource.PlayOneShot(wall, 0.7F);
         if (col.collider.CompareTag("Wall") || col.collider.CompareTag("Ground"))
         {
             canShoot = true;
