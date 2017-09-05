@@ -21,7 +21,7 @@ public class ShootScript : MonoBehaviour
     public float powerbarTreshold;
     bool stuckOnWall = false;
     public bool canShoot = true;
-
+    public float shootAngle = 0;
     public AudioClip wall;
     AudioSource audioSource;
 
@@ -37,6 +37,8 @@ public class ShootScript : MonoBehaviour
 
         audioSource = GetComponent<AudioSource>();
     }
+
+
 
     // Update is called once per frame
     void Update()
@@ -85,10 +87,25 @@ public class ShootScript : MonoBehaviour
     void OnCollisionEnter(Collision col)
     {
         audioSource.PlayOneShot(wall, 0.7F);
-        if (col.collider.CompareTag("Wall") || col.collider.CompareTag("Ground"))
+        if (col.collider.CompareTag("BouncingWall"))
+        {
+            transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            currentForce = -currentForce;
+            Shoot(-getShootAngle(), currentForce);
+        }
+
+        else if (col.collider.CompareTag("BouncingRoof"))
+        {
+            //currentForce = -currentForce;
+            transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            Shoot(-getShootAngle(), currentForce);
+        }
+
+        else if (col.collider.CompareTag("Wall") || col.collider.CompareTag("Ground"))
         {
             canShoot = true;
         }
+
     }
 
     void OnCollisionStay(Collision col)
@@ -130,11 +147,39 @@ public class ShootScript : MonoBehaviour
         transform.GetComponent<Rigidbody>().AddForce(Physics.gravity * gravityMultiplier);
     }
 
-    public void Shoot()
+    public float getShootAngle()
     {
-        float angle = transform.GetComponentInChildren<AimAssist>().Angle;
-        Vector3 dir = Quaternion.AngleAxis(angle, transform.forward) * transform.right;
-        transform.GetComponent<Rigidbody>().AddForce(dir * currentForce * multiplier);
+        return shootAngle;
+    }
+
+    public void Shoot(float Angle = 0, float Force = 0)
+    {
+        float angle;
+        float force;
+        if (Angle == 0)
+        {
+            angle = transform.GetComponentInChildren<AimAssist>().Angle;
+        }
+
+        else
+        {
+            angle = Angle;
+        }
+
+        if (Force == 0)
+        {
+            force = currentForce;
+        }
+
+        else
+        {
+            force = Force;
+        }
+
+        shootAngle = angle;
+
+        Vector3 dir = Quaternion.AngleAxis(shootAngle, transform.forward) * transform.right;
+        transform.GetComponent<Rigidbody>().AddForce(dir * force * multiplier);
         gravityMultiplier = GravityMultiplier;
         canShoot = false;
     }
