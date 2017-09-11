@@ -25,10 +25,11 @@ public class ShootScript : MonoBehaviour
     public float shootAngle = 0;
     public int numberOfShoots = 5;
     public bool infiniteShoots = false;
+    public Text numberOfShootsTxt;
+   
+// Soundstuff -------------------------------------------
 
-    // Soundstuff -------------------------------------------
-
-    public AudioClip wall;
+public AudioClip wall;
     public AudioClip bounce;
     AudioSource audioSource;
 
@@ -49,7 +50,7 @@ public class ShootScript : MonoBehaviour
         powerbar.value = force;
         gravityMultiplier = GravityMultiplier;
         // Mathf.Clamp(force, min, max);
-
+        numberOfShootsTxt.text = "Shoots: " + numberOfShoots;
         audioSource = GetComponent<AudioSource>();
 
     }
@@ -59,6 +60,8 @@ public class ShootScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        numberOfShootsTxt.text = "Shoots: " + numberOfShoots;
+       
         if (force != 0)
         {
             powerbar.value = force;
@@ -92,10 +95,10 @@ public class ShootScript : MonoBehaviour
             if (numberOfShoots > 0 || infiniteShoots)
             {
                 Shoot();
-                numberOfShoots--;
+                if (!infiniteShoots)
+                    numberOfShoots--;
                 mouseButtonPressed = false;
             }
-
             else
             {
                 SceneManager.LoadScene("ProdGame");
