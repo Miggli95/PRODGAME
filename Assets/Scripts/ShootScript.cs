@@ -21,7 +21,7 @@ public class ShootScript : MonoBehaviour
     public Slider powerbar;
     public float powerbarTreshold;
     bool stuckOnWall = false;
-    public bool canShoot = true;
+    public bool canShoot = false;
     public float shootAngle = 0;
     public int numberOfShoots = 5;
     public bool infiniteShoots = false;
