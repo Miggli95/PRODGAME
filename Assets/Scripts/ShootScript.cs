@@ -58,8 +58,22 @@ public AudioClip wall;
 
 
     // Update is called once per frame
+    bool restart = false;
     void Update()
     {
+
+        if (Input.GetKey(KeyCode.R))
+        {
+            restart = true;
+        }
+        else if (restart)
+        {
+            int lvl = SceneManager.GetActiveScene().buildIndex;
+            SceneManager.LoadScene(lvl);
+        }
+
+
+
         numberOfShootsTxt.text = "Shoots: " + numberOfShoots;
        
         if (force != 0)
@@ -99,13 +113,15 @@ public AudioClip wall;
                     numberOfShoots--;
                 mouseButtonPressed = false;
             }
+
             else
             {
                 SceneManager.LoadScene("ProdGame");
             }
+
             //if (canShoot)
             //{
-               
+
             //}
         }
 
