@@ -116,7 +116,7 @@ public AudioClip wall;
 
             else
             {
-                SceneManager.LoadScene("ProdGame");
+                SceneManager.LoadScene("Level1");
             }
 
             //if (canShoot)
