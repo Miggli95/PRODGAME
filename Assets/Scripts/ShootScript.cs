@@ -26,10 +26,11 @@ public class ShootScript : MonoBehaviour
     public int numberOfShoots = 5;
     public bool infiniteShoots = false;
     public Text numberOfShootsTxt;
-   
-// Soundstuff -------------------------------------------
+    public int currlvl;
+    public int numberOfLevels;
+    // Soundstuff -------------------------------------------
 
-public AudioClip wall;
+    public AudioClip wall;
     public AudioClip bounce;
     AudioSource audioSource;
 
@@ -52,6 +53,9 @@ public AudioClip wall;
         // Mathf.Clamp(force, min, max);
         numberOfShootsTxt.text = "Shoots: " + numberOfShoots;
         audioSource = GetComponent<AudioSource>();
+        currlvl = SceneManager.GetActiveScene().buildIndex;
+        numberOfLevels = SceneManager.sceneCountInBuildSettings;
+
 
     }
 
@@ -68,8 +72,8 @@ public AudioClip wall;
         }
         else if (restart)
         {
-            int lvl = SceneManager.GetActiveScene().buildIndex;
-            SceneManager.LoadScene(lvl);
+            //int lvl = SceneManager.GetActiveScene().buildIndex;
+            SceneManager.LoadScene(currlvl);
         }
 
 
@@ -116,7 +120,7 @@ public AudioClip wall;
 
             else
             {
-                SceneManager.LoadScene("Level1");
+                SceneManager.LoadScene(currlvl);
             }
 
             //if (canShoot)
@@ -139,10 +143,16 @@ public AudioClip wall;
 
         if (col.collider.CompareTag("Goal"))
         {
-            int nextLvl = SceneManager.GetActiveScene().buildIndex;
-            if (nextLvl + 1 < SceneManager.sceneCount)
-                nextLvl += 1;
-            SceneManager.LoadScene(nextLvl);
+            int nextLvl = currlvl + 1;
+            if (nextLvl < numberOfLevels)
+            {
+                SceneManager.LoadScene(nextLvl);
+            }
+
+            else
+            {
+                SceneManager.LoadScene(currlvl);
+            }
         }
 
         if (col.collider.CompareTag("BouncingWall"))
