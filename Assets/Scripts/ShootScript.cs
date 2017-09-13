@@ -82,12 +82,12 @@ public class ShootScript : MonoBehaviour
        
         if (force != 0)
         {
-            powerbar.value = force;
+            powerbar.value = Mathf.Abs(force);
         }
 
         else
         {
-            powerbar.value = currentForce;
+            powerbar.value = Mathf.Abs(currentForce);
         }
 
         if (force >= max)
