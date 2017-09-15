@@ -70,7 +70,7 @@ public class ShootScript : MonoBehaviour
     void cameraActive()
     {
         cameraHelper.SetActive(true);
-        camAni.clip.
+     //   camAni.clip.
         
     }
 
