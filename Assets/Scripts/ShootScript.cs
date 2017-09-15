@@ -39,6 +39,14 @@ public class ShootScript : MonoBehaviour
     
     public GameObject wallP;
 
+    // Camer animations
+
+    public Animation camAni;
+    public GameObject cameraHelper;
+
+
+
+
 
 
 
@@ -59,12 +67,24 @@ public class ShootScript : MonoBehaviour
 
     }
 
+    void cameraActive()
+    {
+        cameraHelper.SetActive(true);
+        camAni.clip.
+        
+    }
 
 
     // Update is called once per frame
     bool restart = false;
     void Update()
     {
+
+        if (Input.GetKey(KeyCode.C))
+        {
+            cameraActive();
+        }
+
 
         if (Input.GetKey(KeyCode.R))
         {
