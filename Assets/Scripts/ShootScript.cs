@@ -41,7 +41,7 @@ public class ShootScript : MonoBehaviour
 
     // Camer animations
 
-    public Animation camAni;
+    public AnimationClip camAni;
     public GameObject cameraHelper;
 
 
@@ -67,9 +67,10 @@ public class ShootScript : MonoBehaviour
 
     }
 
-    void cameraActive()
+    void cameraActive(float length, bool active)
     {
-        cameraHelper.SetActive(true);
+        
+        cameraHelper.SetActive(active);
      //   camAni.clip.
         
     }
@@ -77,14 +78,37 @@ public class ShootScript : MonoBehaviour
 
     // Update is called once per frame
     bool restart = false;
-    void Update()
-    {
+    bool viewLevel = false;
+    bool clipPlaying= false;
+    float curTime;
 
-        if (Input.GetKey(KeyCode.C))
+    void CameraHelper()
+    {
+        float length = camAni.length;
+        if (Input.GetKey(KeyCode.C) && !clipPlaying)
         {
-            cameraActive();
+            viewLevel = true;
+            clipPlaying = true;
+            cameraActive(length, true);
         }
 
+        else if (viewLevel)
+        {
+            curTime += Time.deltaTime;
+        }
+
+        if (curTime >= length)
+        {
+            cameraActive(0, false);
+            viewLevel = false;
+            clipPlaying = false;
+            curTime = 0;
+        }
+    }
+
+    void Update()
+    {
+        CameraHelper();
 
         if (Input.GetKey(KeyCode.R))
         {
