@@ -250,10 +250,15 @@ public class ShootScript : MonoBehaviour
     float timer = 0;
     void OnCollisionStay(Collision col)
     {
-        if (!col.collider.CompareTag("Slippery"))
+        if (!col.collider.CompareTag("Slippery") && !col.collider.CompareTag("BouncingWall") && !col.collider.CompareTag("BouncingRoof"))
+        {
+            canShoot = true;
+        }
+
+        if (col.collider.CompareTag("BouncingWall") || col.collider.CompareTag("BouncingRoof"))
         {
             timer += Time.deltaTime;
-            if (timer > 0.5f)
+            if (timer > 0.2f)
             {
                 canShoot = true;
                 timer = 0;
