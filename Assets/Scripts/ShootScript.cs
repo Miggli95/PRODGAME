@@ -247,12 +247,17 @@ public class ShootScript : MonoBehaviour
         }
 
     }
-
+    float timer = 0;
     void OnCollisionStay(Collision col)
     {
         if (!col.collider.CompareTag("Slippery"))
         {
-            canShoot = true;
+            timer += Time.deltaTime;
+            if (timer > 0.5f)
+            {
+                canShoot = true;
+                timer = 0;
+            }
         }
 
         if (col.collider.CompareTag("Wall"))
