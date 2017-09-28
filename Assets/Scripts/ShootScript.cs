@@ -132,10 +132,15 @@ public class ShootScript : MonoBehaviour
 
 
         numberOfShootsTxt.text = "Shoots: " + numberOfShoots;
-       
-        if(numberOfShoots == 1)
+
+        if (numberOfShoots <= 1)
         {
             lastShot.SetActive(true);
+        }
+
+        else
+        {
+            lastShot.SetActive(false);
         }
 
         if (force != 0)
