@@ -113,6 +113,11 @@ public class ShootScript : MonoBehaviour
     void Update()
     {
         CameraHelper();
+        
+        if (numberOfShoots <= 0 && transform.GetComponent<Rigidbody>().velocity == Vector3.zero)
+        {
+            SceneManager.LoadScene(currlvl);
+        }
 
         if (Input.GetKey(KeyCode.R))
         {
@@ -171,16 +176,13 @@ public class ShootScript : MonoBehaviour
                 mouseButtonPressed = false;
             }
 
-            else
-            {
-                SceneManager.LoadScene(currlvl);
-            }
 
             //if (canShoot)
             //{
 
             //}
         }
+
 
         Gravity();
     }
