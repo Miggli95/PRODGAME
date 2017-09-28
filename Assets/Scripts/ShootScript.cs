@@ -44,6 +44,10 @@ public class ShootScript : MonoBehaviour
     public AnimationClip camAni;
     public GameObject cameraHelper;
 
+    // LastShot text
+
+    public GameObject lastShot;
+
 
 
 
@@ -124,6 +128,11 @@ public class ShootScript : MonoBehaviour
 
         numberOfShootsTxt.text = "Shoots: " + numberOfShoots;
        
+        if(numberOfShoots == 1)
+        {
+            lastShot.SetActive(true);
+        }
+
         if (force != 0)
         {
             powerbar.value = Mathf.Abs(force);
