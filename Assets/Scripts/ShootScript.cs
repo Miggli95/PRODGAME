@@ -114,7 +114,7 @@ public class ShootScript : MonoBehaviour
     {
         CameraHelper();
         
-        if (numberOfShoots <= 0 && transform.GetComponent<Rigidbody>().velocity == Vector3.zero)
+        if (numberOfShoots <= 0 && transform.GetComponent<Rigidbody>().velocity == Vector3.zero && canShoot)
         {
             SceneManager.LoadScene(currlvl);
         }
@@ -238,14 +238,14 @@ public class ShootScript : MonoBehaviour
 
    
            
-            canShoot = true;
+            //canShoot = true;
         }
 
     }
 
     void OnCollisionStay(Collision col)
     {
-        if (col.collider.CompareTag("Wall") || col.collider.CompareTag("Ground"))
+        if (!col.collider.CompareTag("Slippery"))
         {
             canShoot = true;
         }
