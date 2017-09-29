@@ -85,7 +85,8 @@ public class ShootScript : MonoBehaviour
     bool viewLevel = false;
     bool clipPlaying= false;
     float curTime;
-
+    bool bounced = false;
+    Vector3 lastBouncePos;
     void CameraHelper()
     {
         float length = camAni.length;
@@ -222,24 +223,31 @@ public class ShootScript : MonoBehaviour
 
         if (col.collider.CompareTag("BouncingWall"))
         {
-            velAngle = Mathf.Atan2(velocity.y, -velocity.x) * Mathf.Rad2Deg;
+            if (Mathf.Abs(lastBouncePos.y - transform.position.y)> 0.15f)
+            {
+                velAngle = Mathf.Atan2(velocity.y, -velocity.x) * Mathf.Rad2Deg;
 
-            transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            Shoot(velAngle, currentForce);
-
-            audioSource.PlayOneShot(bounce, 2.0F);
+                transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                Shoot(velAngle, currentForce);
+                lastBouncePos = transform.position;
+                audioSource.PlayOneShot(bounce, 2.0F);
+                lastBouncePos = transform.position;
+            }
         }
 
         else if (col.collider.CompareTag("BouncingRoof"))
         {
             //currentForce = -currentForce;
 
-            velAngle = Mathf.Atan2(-velocity.y, velocity.x) * Mathf.Rad2Deg;
+            if (Mathf.Abs(lastBouncePos.x - transform.position.x)> 0.15f)
+            {
+                velAngle = Mathf.Atan2(-velocity.y, velocity.x) * Mathf.Rad2Deg;
 
-            transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            Shoot(velAngle, currentForce);
-
-            audioSource.PlayOneShot(bounce, 2.0F);
+                transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                Shoot(velAngle, currentForce);
+                audioSource.PlayOneShot(bounce, 2.0F);
+                lastBouncePos = transform.position;
+            }
         }
 
         else if (col.collider.CompareTag("Wall") || col.collider.CompareTag("Ground"))
