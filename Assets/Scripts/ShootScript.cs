@@ -250,6 +250,21 @@ public class ShootScript : MonoBehaviour
             }
         }
 
+        else if (col.collider.CompareTag("BouncingDiagonal"))
+        {
+            //currentForce = -currentForce;
+
+            if (Mathf.Abs(lastBouncePos.x - transform.position.x) > 0.15f || Mathf.Abs(lastBouncePos.y - transform.position.y) > 0.15f)
+            {
+                velAngle = Mathf.Atan2(-velocity.y, -velocity.x) * Mathf.Rad2Deg;
+
+                transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                Shoot(velAngle, currentForce);
+                audioSource.PlayOneShot(bounce, 2.0F);
+                lastBouncePos = transform.position;
+            }
+        }
+
         else if (col.collider.CompareTag("Wall") || col.collider.CompareTag("Ground"))
         {
             audioSource.PlayOneShot(wall, 0.7F);
