@@ -49,8 +49,8 @@ public class ShootScript : MonoBehaviour
     public GameObject lastShot;
 
 
-
-
+    public float velAngle = 0;
+    public Vector3 velocity;
 
 
 
@@ -113,6 +113,11 @@ public class ShootScript : MonoBehaviour
     void Update()
     {
         CameraHelper();
+        if (transform.GetComponent<Rigidbody>().velocity != Vector3.zero)
+        {
+            velocity = transform.GetComponent<Rigidbody>().velocity;
+            velAngle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
+        }
         
         if (numberOfShoots <= 0 && transform.GetComponent<Rigidbody>().velocity == Vector3.zero && canShoot)
         {
@@ -217,9 +222,10 @@ public class ShootScript : MonoBehaviour
 
         if (col.collider.CompareTag("BouncingWall"))
         {
+            velAngle = Mathf.Atan2(velocity.y, -velocity.x) * Mathf.Rad2Deg;
+
             transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            currentForce = -currentForce;
-            Shoot(-getShootAngle(), currentForce);
+            Shoot(velAngle, currentForce);
 
             audioSource.PlayOneShot(bounce, 2.0F);
         }
@@ -227,9 +233,11 @@ public class ShootScript : MonoBehaviour
         else if (col.collider.CompareTag("BouncingRoof"))
         {
             //currentForce = -currentForce;
-            
+
+            velAngle = Mathf.Atan2(-velocity.y, velocity.x) * Mathf.Rad2Deg;
+
             transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            Shoot(-getShootAngle(), currentForce);
+            Shoot(velAngle, currentForce);
 
             audioSource.PlayOneShot(bounce, 2.0F);
         }
