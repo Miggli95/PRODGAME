@@ -28,6 +28,8 @@ public class ShootScript : MonoBehaviour
     public Text numberOfShootsTxt;
     public int currlvl;
     public int numberOfLevels;
+    public bool blindMode = false;
+    public BlindScript blindScript; 
     // Soundstuff -------------------------------------------
 
     public AudioClip wall;
@@ -67,7 +69,7 @@ public class ShootScript : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         currlvl = SceneManager.GetActiveScene().buildIndex;
         numberOfLevels = SceneManager.sceneCountInBuildSettings;
-
+        blindScript = transform.GetComponent<BlindScript>();
 
     }
 
@@ -87,6 +89,7 @@ public class ShootScript : MonoBehaviour
     float curTime;
     bool bounced = false;
     Vector3 lastBouncePos;
+
     void CameraHelper()
     {
         float length = camAni.length;
@@ -110,10 +113,37 @@ public class ShootScript : MonoBehaviour
             curTime = 0;
         }
     }
+  
+    void BlindMode()
+    {
+        if (Input.GetKey(KeyCode.V))
+        {
+            switchMode = true;
+        }
+
+        else if (switchMode)
+        {
+            blindMode = !blindMode;
+            updateMode = true;
+            switchMode = false;
+            
+            //if (canShoot)
+            //{
+
+            //}
+        }
+
+        if (updateMode)
+        {
+            blindScript.enabled = blindMode;
+            updateMode = false;
+        }
+    }
 
     void Update()
     {
         CameraHelper();
+        BlindMode();
         if (transform.GetComponent<Rigidbody>().velocity != Vector3.zero)
         {
             velocity = transform.GetComponent<Rigidbody>().velocity;
@@ -279,6 +309,9 @@ public class ShootScript : MonoBehaviour
 
     }
     float timer = 0;
+    private bool switchMode;
+    private bool updateMode;
+
     void OnCollisionStay(Collision col)
     {
         if (!col.collider.CompareTag("Slippery") && !col.collider.CompareTag("BouncingWall") && !col.collider.CompareTag("BouncingRoof"))
