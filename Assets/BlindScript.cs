@@ -14,6 +14,7 @@ public class BlindScript : MonoBehaviour {
     Ray ray;
     public float rayLength;
     public float multiplier = 2;
+    public float originalPitch = 1;
 	// Use this for initialization
 	void Start ()
     {
@@ -33,6 +34,18 @@ public class BlindScript : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
+       if (aim.Angle > 90 || aim.Angle < -90)
+        {
+            sensor.pitch = 2;
+            Debug.Log("Aiming Left");
+        }
+
+        else
+        {
+            sensor.pitch = 1;
+            Debug.Log("AimingRight");
+        }
+        
         Vector3 dir = Quaternion.AngleAxis(aim.Angle, transform.forward) * transform.right;
         ray = new Ray(transform.position, dir);
         hit = Physics.Raycast(ray,out rayHit);

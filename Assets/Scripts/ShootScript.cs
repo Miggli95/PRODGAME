@@ -138,10 +138,13 @@ public class ShootScript : MonoBehaviour
             blindScript.enabled = blindMode;
             updateMode = false;
         }
+
+        
     }
 
     void Update()
     {
+        shootAngle = transform.GetComponentInChildren<AimAssist>().Angle;
         CameraHelper();
         BlindMode();
         if (transform.GetComponent<Rigidbody>().velocity != Vector3.zero)
