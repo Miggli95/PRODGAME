@@ -7,7 +7,8 @@ public class BlindScript : MonoBehaviour {
     public AudioSource goal;
     public AudioSource sensor;
     public AudioClip goalSound;
-    public AudioClip sensorSound;
+    public AudioClip sensorSoundRight;
+    public AudioClip sensorSoundLeft;
     RaycastHit rayHit;
     AimAssist aim;
     public bool hit;
@@ -21,7 +22,7 @@ public class BlindScript : MonoBehaviour {
         aim = transform.GetComponentInChildren<AimAssist>();
         if(sensor == null)
             sensor = transform.GetComponent<AudioSource>();
-        sensor.clip = sensorSound;
+        sensor.clip = sensorSoundRight;
         goal = GameObject.FindGameObjectWithTag("Goal").GetComponent<AudioSource>();
         goal.maxDistance = (goal.transform.position - transform.position).magnitude+10; 
         goal.clip = goalSound;
@@ -30,19 +31,36 @@ public class BlindScript : MonoBehaviour {
     float time;
     float timer;
     private bool mouseButtonPressed;
-
+    AudioClip currentSensorSound;
     // Update is called once per frame
     void Update ()
     {
-       if (aim.Angle > 90 || aim.Angle < -90)
+        if (aim.Angle > 0 || aim.Angle < -180)
+        {
+            sensor.pitch = 1;
+        }
+
+        else
         {
             sensor.pitch = 2;
+        }
+
+       if (aim.Angle > 90 || aim.Angle < -90)
+        {
+            if (sensor.clip != goalSound)
+            {
+                sensor.clip = sensorSoundLeft;
+            }
+            
             Debug.Log("Aiming Left");
         }
 
         else
         {
-            sensor.pitch = 1;
+            if (sensor.clip != goalSound)
+            {
+                sensor.clip = sensorSoundRight;
+            }
             Debug.Log("AimingRight");
         }
         
@@ -56,12 +74,18 @@ public class BlindScript : MonoBehaviour {
 
         if (rayHit.collider.CompareTag("Goal") || rayHit.collider.CompareTag("ExtraShoot") )
         {
+            if (sensor.clip != goalSound || currentSensorSound == null)
+            {
+                currentSensorSound = sensor.clip;
+            }
+
             sensor.clip = goalSound;
         }
 
         else
         {
-            sensor.clip = sensorSound;
+            if(sensor.clip == goalSound)
+            sensor.clip = currentSensorSound;
         }
 
         if (timer > time && !sensor.isPlaying || sensor.clip != goalSound && timer > time)
