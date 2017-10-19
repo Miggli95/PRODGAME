@@ -41,7 +41,7 @@ public class ShootScript : MonoBehaviour
     
     public GameObject wallP;
 
-    // Camer animations
+    // Camera animations
 
     public AnimationClip camAni;
     public GameObject cameraHelper;
@@ -70,6 +70,7 @@ public class ShootScript : MonoBehaviour
         currlvl = SceneManager.GetActiveScene().buildIndex;
         numberOfLevels = SceneManager.sceneCountInBuildSettings;
         blindScript = transform.GetComponent<BlindScript>();
+        blindMode = blindScript.enabled;
 
     }
 
@@ -204,7 +205,15 @@ public class ShootScript : MonoBehaviour
 
         if (Input.GetMouseButton(0) && canShoot)
         {
-            force += increase * Time.deltaTime * increaseMultiplier;
+            if (!blindMode)
+            {
+                force += increase * Time.deltaTime * increaseMultiplier;
+            }
+
+            else
+            {
+                force = max;
+            }
             mouseButtonPressed = true;
         }
 

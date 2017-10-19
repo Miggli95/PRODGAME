@@ -16,6 +16,7 @@ public class BlindScript : MonoBehaviour {
     public float rayLength;
     public float multiplier = 2;
     public float originalPitch = 1;
+    public List<SoundSignal> blindPath; 
 	// Use this for initialization
 	void Start ()
     {
@@ -94,12 +95,22 @@ public class BlindScript : MonoBehaviour {
             timer = 0;
         }
 
-        sensor.mute = goal.isPlaying;
+       
+        if (blindPath[0] == null)
+        {
+            if (blindPath.Count > 1)
+            {
+                blindPath[0] = blindPath[1];
+                blindPath.Remove(blindPath[1]);
+            }
+        }
 
-        if (Input.GetMouseButton(1) && !goal.isPlaying)
+        sensor.mute = blindPath[0].source.isPlaying;
+        if (Input.GetMouseButton(1) && !blindPath[0].playingSound)
         {
             //Debug.Log("goalSound");
-            goal.PlayOneShot(goalSound);
+
+            blindPath[0].PlaySound(goalSound);
         }
     }
 }
