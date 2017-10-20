@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AimAssist : MonoBehaviour {
     public float Angle;
+    public bool blindMode;
+    
 	// Use this for initialization
 	void Start ()
     {
@@ -13,14 +15,23 @@ public class AimAssist : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        Vector3 mousePos = Input.mousePosition;
-        Vector3 playerPos = Camera.main.WorldToScreenPoint(this.transform.position);//kanske vara parent transform
-        mousePos.x = mousePos.x - playerPos.x;
-        mousePos.y = mousePos.y - playerPos.y;
+        if (!blindMode)
+        {
+            Vector3 mousePos = Input.mousePosition;
+            Vector3 playerPos = Camera.main.WorldToScreenPoint(this.transform.position);//kanske vara parent transform
+            mousePos.x = mousePos.x - playerPos.x;
+            mousePos.y = mousePos.y - playerPos.y;
 
-        float angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
+            float angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
+            Angle = angle;
+            this.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+        }
+    }
+
+    public void UpdateBlind(float angle)
+    {
+
         Angle = angle;
         this.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-
     }
 }

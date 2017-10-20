@@ -29,7 +29,9 @@ public class ShootScript : MonoBehaviour
     public int currlvl;
     public int numberOfLevels;
     public bool blindMode = false;
-    public BlindScript blindScript; 
+    public BlindScript blindScript;
+    public float blindAimSpeed = 10;
+    AimAssist aim;
     // Soundstuff -------------------------------------------
 
     public AudioClip wall;
@@ -71,6 +73,7 @@ public class ShootScript : MonoBehaviour
         numberOfLevels = SceneManager.sceneCountInBuildSettings;
         blindScript = transform.GetComponent<BlindScript>();
         blindMode = blindScript.enabled;
+        aim = transform.GetComponentInChildren<AimAssist>();
 
     }
 
@@ -125,6 +128,7 @@ public class ShootScript : MonoBehaviour
         else if (switchMode)
         {
             blindMode = !blindMode;
+            
             updateMode = true;
             switchMode = false;
             
@@ -145,6 +149,7 @@ public class ShootScript : MonoBehaviour
 
     void Update()
     {
+        aim.blindMode = blindMode;
         shootAngle = transform.GetComponentInChildren<AimAssist>().Angle;
         CameraHelper();
         BlindMode();
@@ -223,7 +228,7 @@ public class ShootScript : MonoBehaviour
             force = 0;
             if (numberOfShoots > 0 || infiniteShoots)
             {
-                Shoot();
+                shooting = true;
                 if (!infiniteShoots)
                     numberOfShoots--;
                 mouseButtonPressed = false;
@@ -237,9 +242,18 @@ public class ShootScript : MonoBehaviour
         }
 
 
-        Gravity();
+      
     }
 
+    void FixedUpdate()
+    {
+        if (shooting)
+        {
+            Shoot();
+            shooting = false;
+        }
+        Gravity();
+    }
     public void AddShoots(int shoots)
     {
         numberOfShoots += shoots;
@@ -323,6 +337,7 @@ public class ShootScript : MonoBehaviour
     float timer = 0;
     private bool switchMode;
     private bool updateMode;
+    private bool shooting;
 
     void OnCollisionStay(Collision col)
     {
@@ -382,9 +397,18 @@ public class ShootScript : MonoBehaviour
     {
         float angle;
         float force;
+
         if (Angle == 0)
         {
-            angle = transform.GetComponentInChildren<AimAssist>().Angle;
+            if (blindMode)
+            {
+                angle = blindScript.getAngle();
+            }
+
+            else
+            {
+                angle = transform.GetComponentInChildren<AimAssist>().Angle;
+            }
         }
 
         else

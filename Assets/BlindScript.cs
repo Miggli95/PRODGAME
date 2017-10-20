@@ -16,7 +16,8 @@ public class BlindScript : MonoBehaviour {
     public float rayLength;
     public float multiplier = 2;
     public float originalPitch = 1;
-    public List<SoundSignal> blindPath; 
+    public List<SoundSignal> blindPath;
+    public float angle;
 	// Use this for initialization
 	void Start ()
     {
@@ -27,16 +28,52 @@ public class BlindScript : MonoBehaviour {
         goal = GameObject.FindGameObjectWithTag("Goal").GetComponent<AudioSource>();
         goal.maxDistance = (goal.transform.position - transform.position).magnitude+10; 
         goal.clip = goalSound;
-
+        
     }
     float time;
     float timer;
     private bool mouseButtonPressed;
     AudioClip currentSensorSound;
     // Update is called once per frame
+
+    public float getAngle()
+    {
+        return angle;
+    }
+
+    public void UpdateAngle()
+    {
+        angle = Mathf.Clamp(angle, -180, 180);
+        if (angle <= -180)
+        {
+            angle = 180;
+        }
+
+        else if (angle >= 180)
+        {
+            angle = -180;
+        }
+        //angle = Mathf.Atan(transform.rotation.eulerAngles.z) * Mathf.Rad2Deg;
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            angle--;
+        }
+
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            angle++;
+        }
+
+       
+    }
+
     void Update ()
     {
-        if (aim.Angle > 0 || aim.Angle < -180)
+      
+        UpdateAngle();
+        aim.UpdateBlind(angle);
+        //angle = aim.Angle;
+        if (aim.Angle > 0 || aim.Angle < -180 || sensor.clip == goalSound )
         {
             sensor.pitch = 1;
         }
