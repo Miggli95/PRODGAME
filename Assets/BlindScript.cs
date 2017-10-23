@@ -56,12 +56,12 @@ public class BlindScript : MonoBehaviour {
         //angle = Mathf.Atan(transform.rotation.eulerAngles.z) * Mathf.Rad2Deg;
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            angle--;
+            angle-= 1*multiplier * Time.deltaTime;
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            angle++;
+            angle+= 1*multiplier * Time.deltaTime;
         }
 
        
