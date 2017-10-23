@@ -32,8 +32,9 @@ public class ShootScript : MonoBehaviour
     public BlindScript blindScript;
     public float blindAimSpeed = 10;
     AimAssist aim;
+    public bool paused = false;
     // Soundstuff -------------------------------------------
-
+    GameObject pauseScreen;
     public AudioClip wall;
     public AudioClip bounce;
     AudioSource audioSource;
@@ -55,12 +56,20 @@ public class ShootScript : MonoBehaviour
 
     public float velAngle = 0;
     public Vector3 velocity;
-
-
+    public bool OnGround = false;
+    public Button button;
 
     // Use this for initialization
+    public bool mouseActive = true;
+
+
+    public void MouseSetActive(bool value)
+    {
+        mouseActive = value;
+    }
     void Start()
     {
+        //Input.mousePosition;
         powerbar.minValue = min;
         powerbar.maxValue = max;
         powerbarTreshold = max - min;
@@ -74,6 +83,8 @@ public class ShootScript : MonoBehaviour
         blindScript = transform.GetComponent<BlindScript>();
         blindMode = blindScript.enabled;
         aim = transform.GetComponentInChildren<AimAssist>();
+        pauseScreen = GameObject.FindGameObjectWithTag("PauseScreen").transform.GetChild(0).gameObject;
+
 
     }
 
@@ -149,98 +160,101 @@ public class ShootScript : MonoBehaviour
 
     void Update()
     {
-        aim.blindMode = blindMode;
-        shootAngle = transform.GetComponentInChildren<AimAssist>().Angle;
-        CameraHelper();
-        BlindMode();
-        if (transform.GetComponent<Rigidbody>().velocity != Vector3.zero)
-        {
-            velocity = transform.GetComponent<Rigidbody>().velocity;
-            velAngle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
-        }
-        
-        if (numberOfShoots <= 0 && transform.GetComponent<Rigidbody>().velocity == Vector3.zero && canShoot)
-        {
-            SceneManager.LoadScene(currlvl);
-        }
+        paused = pauseScreen.activeSelf;
 
-        if (Input.GetKey(KeyCode.R))
-        {
-            restart = true;
-        }
-        else if (restart)
-        {
-            //int lvl = SceneManager.GetActiveScene().buildIndex;
-            SceneManager.LoadScene(currlvl);
-        }
-
-
-
-        numberOfShootsTxt.text = "Shoots: " + numberOfShoots;
-
-        if (numberOfShoots <= 1)
-        {
-            lastShot.SetActive(true);
-        }
-
-        else
-        {
-            lastShot.SetActive(false);
-        }
-
-        if (force != 0)
-        {
-            powerbar.value = Mathf.Abs(force);
-        }
-
-        else
-        {
-            powerbar.value = Mathf.Abs(currentForce);
-        }
-
-        if (force >= max)
-        {
-            increase = -1;
-        }
-
-        if (force <= min)
-        {
-            increase = 1;
-        }
-
-        if (Input.GetMouseButton(0) && canShoot)
-        {
-            if (!blindMode)
+        canShoot = !paused && OnGround;
+            aim.blindMode = blindMode;
+            shootAngle = transform.GetComponentInChildren<AimAssist>().Angle;
+            CameraHelper();
+            BlindMode();
+            if (transform.GetComponent<Rigidbody>().velocity != Vector3.zero)
             {
-                force += increase * Time.deltaTime * increaseMultiplier;
+                velocity = transform.GetComponent<Rigidbody>().velocity;
+                velAngle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
+            }
+
+            if (numberOfShoots <= 0 && transform.GetComponent<Rigidbody>().velocity == Vector3.zero && canShoot)
+            {
+                SceneManager.LoadScene(currlvl);
+            }
+
+            if (Input.GetKey(KeyCode.R))
+            {
+                restart = true;
+            }
+            else if (restart)
+            {
+                //int lvl = SceneManager.GetActiveScene().buildIndex;
+                SceneManager.LoadScene(currlvl);
+            }
+
+
+
+            numberOfShootsTxt.text = "Shoots: " + numberOfShoots;
+
+            if (numberOfShoots <= 1)
+            {
+                lastShot.SetActive(true);
             }
 
             else
             {
-                force = max;
+                lastShot.SetActive(false);
             }
-            mouseButtonPressed = true;
-        }
 
-        else if (mouseButtonPressed)
-        {
-            currentForce = force;
-            force = 0;
-            if (numberOfShoots > 0 || infiniteShoots)
+            if (force != 0)
             {
-                shooting = true;
-                if (!infiniteShoots)
-                    numberOfShoots--;
-                mouseButtonPressed = false;
+                powerbar.value = Mathf.Abs(force);
             }
 
+            else
+            {
+                powerbar.value = Mathf.Abs(currentForce);
+            }
 
-            //if (canShoot)
-            //{
+            if (force >= max)
+            {
+                increase = -1;
+            }
 
-            //}
-        }
+            if (force <= min)
+            {
+                increase = 1;
+            }
 
+            if (Input.GetMouseButton(0) && canShoot && mouseActive)
+            {
+                if (!blindMode)
+                {
+                    force += increase * Time.deltaTime * increaseMultiplier;
+                }
+
+                else
+                {
+                    force = max;
+                }
+                mouseButtonPressed = true;
+            }
+
+            else if (mouseButtonPressed)
+            {
+                currentForce = force;
+                force = 0;
+                if (numberOfShoots > 0 || infiniteShoots)
+                {
+                    shooting = true;
+                    if (!infiniteShoots)
+                        numberOfShoots--;
+                    mouseButtonPressed = false;
+                }
+
+
+                //if (canShoot)
+                //{
+
+                //}
+            }
+        
 
       
     }
@@ -343,7 +357,7 @@ public class ShootScript : MonoBehaviour
     {
         if (!col.collider.CompareTag("Slippery") && !col.collider.CompareTag("BouncingWall") && !col.collider.CompareTag("BouncingRoof"))
         {
-            canShoot = true;
+            OnGround = true;
         }
 
         if (col.collider.CompareTag("BouncingWall") || col.collider.CompareTag("BouncingRoof"))
@@ -351,7 +365,7 @@ public class ShootScript : MonoBehaviour
             timer += Time.deltaTime;
             if (timer > 0.2f)
             {
-                canShoot = true;
+                OnGround = true;
                 timer = 0;
             }
         }
@@ -374,7 +388,7 @@ public class ShootScript : MonoBehaviour
         
         if (col.collider.CompareTag("Wall") || col.collider.CompareTag("Ground"))
         {
-            canShoot = false;
+            OnGround = false;
             gravityMultiplier = GravityMultiplier;    
         }
 
@@ -431,6 +445,6 @@ public class ShootScript : MonoBehaviour
         Vector3 dir = Quaternion.AngleAxis(shootAngle, transform.forward) * transform.right;
         transform.GetComponent<Rigidbody>().AddForce(dir * force * multiplier);
         gravityMultiplier = GravityMultiplier;
-        canShoot = false;
+        OnGround = false;
     }
 }
