@@ -25,6 +25,7 @@ public class PauseScript : MonoBehaviour
         {
             //player.GetComponent<ShootScript>().enabled = false;
             shootScript.enabled = false;
+            player.GetComponentInChildren<AimAssist>().enabled = false;
             Time.timeScale = 0;
             
         }
@@ -33,6 +34,7 @@ public class PauseScript : MonoBehaviour
         {
             //player.GetComponent<ShootScript>().enabled = true;
             shootScript.enabled = true;
+            player.GetComponentInChildren<AimAssist>().enabled = true;
             Time.timeScale = 1;
         }
     }

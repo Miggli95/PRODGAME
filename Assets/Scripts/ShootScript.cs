@@ -74,6 +74,7 @@ public class ShootScript : MonoBehaviour
         powerbar.maxValue = max;
         powerbarTreshold = max - min;
         powerbar.value = force;
+        powerbar.interactable = false;
         gravityMultiplier = GravityMultiplier;
         // Mathf.Clamp(force, min, max);
         numberOfShootsTxt.text = "Shoots: " + numberOfShoots;
