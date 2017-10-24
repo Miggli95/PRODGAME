@@ -69,6 +69,7 @@ public class ShootScript : MonoBehaviour
     }
     void Start()
     {
+        
         //Input.mousePosition;
         powerbar.minValue = min;
         powerbar.maxValue = max;
@@ -85,8 +86,11 @@ public class ShootScript : MonoBehaviour
         blindMode = blindScript.enabled;
         aim = transform.GetComponentInChildren<AimAssist>();
         pauseScreen = GameObject.FindGameObjectWithTag("PauseScreen").transform.GetChild(0).gameObject;
-
-
+        if (GetComponent<BlindScript>() == false)
+        {
+            gameObject.AddComponent<BlindScript>();
+            gameObject.GetComponent<BlindScript>().enabled = false;
+        }
     }
 
     void cameraActive(float length, bool active)

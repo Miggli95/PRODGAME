@@ -5,15 +5,21 @@ using UnityEngine;
 public class PauseScript : MonoBehaviour
 {
     public GameObject pauseScreen;
+    public GameObject helpScreen;
     public bool paused = false;
     public GameObject player;
     public ShootScript shootScript;
+    
 	// Use this for initialization
 	void Start ()
     {
-        pauseScreen = GameObject.FindGameObjectWithTag("PauseScreen").transform.GetChild(0).gameObject;
+        Transform parent = GameObject.FindGameObjectWithTag("PauseScreen").transform;
+        pauseScreen = parent.GetChild(0).gameObject;
+        helpScreen = parent.GetChild(1).gameObject;
         player = GameObject.FindGameObjectWithTag("Player");
         shootScript = player.GetComponent<ShootScript>();
+       
+    
     }
 
     public void Pause()
@@ -33,6 +39,7 @@ public class PauseScript : MonoBehaviour
         else
         {
             //player.GetComponent<ShootScript>().enabled = true;
+            helpScreen.SetActive(false);
             shootScript.enabled = true;
             player.GetComponentInChildren<AimAssist>().enabled = true;
             Time.timeScale = 1;
@@ -43,6 +50,12 @@ public class PauseScript : MonoBehaviour
     {
 		
 	}
+
+    public void Help()
+    {
+        helpScreen.SetActive(true);
+        pauseScreen.SetActive(false);
+    }
 
     public void OnMouseOver()
     {
