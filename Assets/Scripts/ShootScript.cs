@@ -69,8 +69,10 @@ public class ShootScript : MonoBehaviour
     }
     void Start()
     {
-        
+
         //Input.mousePosition;
+        if(powerbar == null)
+        powerbar = GameObject.FindGameObjectWithTag("Powerbar").GetComponent<Slider>();
         powerbar.minValue = min;
         powerbar.maxValue = max;
         powerbarTreshold = max - min;
@@ -78,6 +80,9 @@ public class ShootScript : MonoBehaviour
         powerbar.interactable = false;
         gravityMultiplier = GravityMultiplier;
         // Mathf.Clamp(force, min, max);
+        numberOfShootsTxt = GameObject.FindGameObjectWithTag("NumberOfShootsTxt").GetComponent<Text>();
+        lastShot = GameObject.FindGameObjectWithTag("LastShot");
+        lastShot.SetActive(false);
         numberOfShootsTxt.text = "Shoots: " + numberOfShoots;
         audioSource = GetComponent<AudioSource>();
         currlvl = SceneManager.GetActiveScene().buildIndex;
@@ -86,11 +91,15 @@ public class ShootScript : MonoBehaviour
         blindMode = blindScript.enabled;
         aim = transform.GetComponentInChildren<AimAssist>();
         pauseScreen = GameObject.FindGameObjectWithTag("PauseScreen").transform.GetChild(0).gameObject;
+        wallP = GameObject.FindGameObjectWithTag("WallHitParticle");
+       
         if (GetComponent<BlindScript>() == false)
         {
             gameObject.AddComponent<BlindScript>();
             gameObject.GetComponent<BlindScript>().enabled = false;
         }
+
+
     }
 
     void cameraActive(float length, bool active)

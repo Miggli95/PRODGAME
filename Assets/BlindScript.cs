@@ -28,6 +28,16 @@ public class BlindScript : MonoBehaviour {
         goal = GameObject.FindGameObjectWithTag("Goal").GetComponent<AudioSource>();
         goal.maxDistance = (goal.transform.position - transform.position).magnitude+10; 
         goal.clip = goalSound;
+        List<GameObject> gameObjects = new List<GameObject>();
+        gameObjects.AddRange(GameObject.FindGameObjectsWithTag("ExtraShoot"));
+        gameObjects.Add(GameObject.FindGameObjectWithTag("Goal"));
+
+        foreach (GameObject g in gameObjects)
+        {
+            blindPath.Add(g.GetComponent<SoundSignal>());
+        }
+
+        blindPath.Sort();
         
     }
     float time;
@@ -126,13 +136,13 @@ public class BlindScript : MonoBehaviour {
             sensor.clip = currentSensorSound;
         }
 
-        if (timer > time && !sensor.isPlaying || sensor.clip != goalSound && timer > time)
+        if (timer > time && !sensor.isPlaying)
         {
             sensor.PlayOneShot(sensor.clip);
             timer = 0;
         }
 
-       
+
         if (blindPath[0] == null)
         {
             if (blindPath.Count > 1)
@@ -142,7 +152,11 @@ public class BlindScript : MonoBehaviour {
             }
         }
 
-        sensor.mute = blindPath[0].source.isPlaying;
+        else
+        {
+            sensor.mute = blindPath[0].source.isPlaying;
+        }
+
         if (Input.GetMouseButton(1) && !blindPath[0].playingSound)
         {
             //Debug.Log("goalSound");
