@@ -90,7 +90,7 @@ public class ShootScript : MonoBehaviour
         blindScript = transform.GetComponent<BlindScript>();
         blindMode = blindScript.enabled;
         aim = transform.GetComponentInChildren<AimAssist>();
-        pauseScreen = GameObject.FindGameObjectWithTag("PauseScreen").transform.GetChild(0).gameObject;
+        pauseScreen = GameObject.FindGameObjectWithTag("PauseScreen").transform.GetChild(1).gameObject;
         wallP = GameObject.FindGameObjectWithTag("WallHitParticle");
        
         if (GetComponent<BlindScript>() == false)

@@ -12,7 +12,7 @@ public class BackScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        pauseScreen = GameObject.FindGameObjectWithTag("PauseScreen").transform.GetChild(0).gameObject;
+        pauseScreen = GameObject.FindGameObjectWithTag("PauseScreen").transform.GetChild(1).gameObject;
 
         player = GameObject.FindGameObjectWithTag("Player");
         shootScript = player.GetComponent<ShootScript>();

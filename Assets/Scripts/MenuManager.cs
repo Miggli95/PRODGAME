@@ -12,9 +12,14 @@ public class MenuManager : MonoBehaviour
 
     public GameObject instructionOBJ;
 
+    void Start()
+    {
+        Time.timeScale = 1;
+    }
+
     public void toGame()
     {
-
+     
         SceneManager.LoadScene("Level1");
     }
 
